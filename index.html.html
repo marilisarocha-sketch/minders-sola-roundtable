@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOLA Round Table · Facilitação</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --surface2: #1c2030;
+    --border: #252a3a;
+    --accent: #4f8ef7;
+    --accent2: #f7a94f;
+    --accent3: #4ff7a9;
+    --text: #e8eaf2;
+    --text-muted: #6b7292;
+    --text-dim: #9ba3c4;
+    --red: #f7614f;
+    --purple: #c97ff7;
+    --note-bg: #111520;
+    --note-border: #2a3050;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.65; }
+
+  /* HEADER */
+  header { border-bottom: 1px solid var(--border); padding: 28px 48px; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+  .header-left h1 { font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: var(--text); line-height: 1.15; }
+  .header-left h1 em { font-style: italic; color: var(--accent); }
+  .header-meta { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .badge { font-family: 'DM Mono', monospace; font-size: 11px; padding: 3px 9px; border-radius: 4px; background: #1c2030; color: var(--text-dim); border: 1px solid var(--border); letter-spacing: 0.04em; text-transform: uppercase; }
+  .badge.blue { color: var(--accent); border-color: rgba(79,142,247,0.3); background: rgba(79,142,247,0.08); }
+  .badge.orange { color: var(--accent2); border-color: rgba(247,169,79,0.3); background: rgba(247,169,79,0.08); }
+  .badge.green { color: var(--accent3); border-color: rgba(79,247,169,0.3); background: rgba(79,247,169,0.08); }
+
+  /* TOP ACTIONS */
+  .top-actions { display: flex; gap: 10px; align-items: center; }
+  .btn { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; }
+  .btn-save { background: rgba(79,142,247,0.12); color: var(--accent); border-color: rgba(79,142,247,0.3); }
+  .btn-save:hover { background: rgba(79,142,247,0.22); }
+  .btn-export { background: rgba(79,247,169,0.08); color: var(--accent3); border-color: rgba(79,247,169,0.25); }
+  .btn-export:hover { background: rgba(79,247,169,0.16); }
+  .btn-clear { background: rgba(247,97,79,0.08); color: var(--red); border-color: rgba(247,97,79,0.2); }
+  .btn-clear:hover { background: rgba(247,97,79,0.15); }
+  .save-status { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent3); opacity: 0; transition: opacity 0.4s; }
+  .save-status.show { opacity: 1; }
+
+  /* MAIN */
+  main { max-width: 1060px; margin: 0 auto; padding: 36px 48px 80px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 32px; }
+  .tab { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; padding: 10px 22px; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+  .tab:hover { color: var(--text-dim); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* SECTION */
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* INTRO BAR */
+  .intro-bar { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 14px 20px; margin-bottom: 32px; font-size: 13.5px; color: var(--text-dim); }
+  .intro-bar strong { color: var(--text); }
+
+  /* PHASE */
+  .phase { margin-bottom: 40px; }
+  .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .phase-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.25); border-radius: 4px; padding: 3px 9px; }
+  .phase-title { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--text); }
+  .phase-time { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-muted); margin-left: auto; }
+
+  /* QUESTION BLOCK */
+  .q-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+  .q-category { padding: 9px 16px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .q-category.meddpicc { color: var(--accent); }
+  .q-category.sizing { color: var(--accent2); }
+  .q-category.urgency { color: var(--accent3); }
+  .q-category.coaching { color: var(--purple); }
+  .q-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 0; }
+
+  /* QUESTION ITEM */
+  .q-item { border-bottom: 1px solid rgba(255,255,255,0.04); padding: 10px 0; }
+  .q-item:last-child { border-bottom: none; }
+  .q-row { display: flex; gap: 10px; align-items: flex-start; }
+  .q-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); padding-top: 2px; flex-shrink: 0; min-width: 22px; }
+  .q-text { font-size: 13.5px; color: var(--text-dim); line-height: 1.55; flex: 1; }
+  .q-text strong { color: var(--text); font-weight: 500; }
+  .q-text em { color: var(--accent2); font-style: normal; font-size: 12px; }
+
+  /* NOTE INPUT */
+  .note-row { margin-top: 6px; margin-left: 32px; }
+  .note-input { width: 100%; background: var(--note-bg); border: 1px solid var(--note-border); border-radius: 6px; padding: 7px 10px; font-family: 'DM Sans', sans-serif; font-size: 12.5px; color: var(--text-dim); resize: vertical; min-height: 36px; max-height: 120px; line-height: 1.5; transition: border-color 0.15s; outline: none; }
+  .note-input::placeholder { color: #3a4060; font-style: italic; }
+  .note-input:focus { border-color: rgba(79,142,247,0.4); color: var(--text); }
+
+  /* FREE NOTE */
+  .free-note-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; }
+  .free-note-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .free-note-label.alert { color: var(--red); }
+  .free-note-label.obs { color: var(--accent2); }
+  .free-note-label.next { color: var(--accent3); }
+  .free-note-label.general { color: var(--purple); }
+  .free-note-textarea { width: 100%; background: var(--note-bg); border: 1px solid var(--note-border); border-radius: 6px; padding: 10px 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text-dim); resize: vertical; min-height: 72px; line-height: 1.6; outline: none; transition: border-color 0.15s; }
+  .free-note-textarea::placeholder { color: #3a4060; font-style: italic; }
+  .free-note-textarea:focus { border-color: rgba(79,142,247,0.35); color: var(--text); }
+
+  /* NEXT STEPS */
+  .next-steps-grid { display: flex; flex-direction: column; gap: 10px; }
+  .next-step-row { display: grid; grid-template-columns: 1fr 160px 140px; gap: 10px; align-items: start; }
+  .ns-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+  .ns-input { width: 100%; background: var(--note-bg); border: 1px solid var(--note-border); border-radius: 6px; padding: 8px 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text-dim); outline: none; transition: border-color 0.15s; }
+  .ns-input:focus { border-color: rgba(79,247,169,0.35); color: var(--text); }
+  .ns-input::placeholder { color: #3a4060; font-style: italic; font-size: 12px; }
+
+  /* DECISION TABLE */
+  .decision-wrap { overflow-x: auto; }
+  .decision-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .decision-table th { background: var(--surface2); color: var(--text-dim); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 14px; text-align: left; border: 1px solid var(--border); }
+  .decision-table td { padding: 9px 14px; border: 1px solid var(--border); color: var(--text-dim); vertical-align: top; line-height: 1.5; }
+  .signal-go { color: var(--accent3); font-weight: 600; }
+  .signal-warn { color: var(--accent2); font-weight: 600; }
+  .signal-stop { color: var(--red); font-weight: 600; }
+
+  /* DECISION SELECT */
+  .decision-select-row { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+  .decision-select-row label { font-size: 13px; color: var(--text-dim); font-weight: 500; }
+  .deal-decision { background: var(--note-bg); border: 1px solid var(--note-border); border-radius: 6px; padding: 6px 12px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim); outline: none; cursor: pointer; }
+  .deal-decision:focus { border-color: var(--accent); }
+
+  /* COACHING BLOCK */
+  .coaching-box { background: rgba(201,127,247,0.05); border: 1px solid rgba(201,127,247,0.18); border-radius: 10px; padding: 18px 20px; margin-bottom: 14px; }
+  .coaching-box .box-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--purple); margin-bottom: 10px; font-family: 'DM Mono', monospace; }
+  .coaching-box ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .coaching-box ul li { font-size: 13px; color: var(--text-dim); padding-left: 16px; position: relative; line-height: 1.55; }
+  .coaching-box ul li::before { content: '◆'; position: absolute; left: 0; color: var(--purple); font-size: 7px; top: 5px; }
+  .coaching-box ul li strong { color: var(--text); font-weight: 500; }
+
+  /* CARD GRID */
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+  .card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .card-title .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; }
+  .card-title .dot.green { background: var(--accent3); }
+  .card ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .card ul li { font-size: 13px; color: var(--text-dim); padding-left: 12px; position: relative; line-height: 1.5; }
+  .card ul li::before { content: '→'; position: absolute; left: 0; color: var(--text-muted); font-size: 11px; }
+  .card ul li em { color: var(--accent2); font-style: italic; }
+
+  /* ALERT BOX */
+  .alert-box { background: rgba(247,97,79,0.05); border: 1px solid rgba(247,97,79,0.18); border-radius: 8px; padding: 13px 16px; margin-top: 10px; font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+  .alert-box strong { color: var(--red); }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  @media (max-width: 768px) {
+    header { padding: 20px 24px; flex-direction: column; }
+    main { padding: 24px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .next-step-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>SOLA Sales Round Table<br><em>2 Deals Deep Dive</em></h1>
+    <div class="header-meta">
+      <span class="badge blue">Monday 18/05 · 10:30–12:00</span>
+      <span class="badge orange">New Logo × 2</span>
+      <span class="badge">Facilitator: Mari</span>
+    </div>
+  </div>
+  <div class="top-actions">
+    <span class="save-status" id="saveStatus">✓ Salvo</span>
+    <button class="btn btn-save" onclick="saveNotes()">💾 Salvar</button>
+    <button class="btn btn-export" onclick="exportNotes()">↗ Exportar</button>
+    <button class="btn btn-clear" onclick="clearNotes()">✕ Limpar</button>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-bar">
+    <strong>Seu papel:</strong> Facilitar, fazer perguntas, coaching estratégico. Eles apresentam — você conduz. Objetivo: qualificar se os deals pertencem ao Q3, validar o sizing real, e sair com próximos passos concretos.
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('ypf')">Deal 01 · YPF</div>
+    <div class="tab" onclick="switchTab('macro')">Deal 02 · Banco Macro</div>
+    <div class="tab" onclick="switchTab('coaching')">Coaching</div>
+    <div class="tab" onclick="switchTab('decisao')">Decisão Final</div>
+  </div>
+
+  <!-- ==================== TAB: YPF ==================== -->
+  <div id="tab-ypf" class="tab-content active">
+
+    <div class="phase">
+      <div class="section-label">Qualificação MEDDPICC</div>
+      <div class="phase-header">
+        <span class="phase-num">Deal 01</span>
+        <span class="phase-title">YPF</span>
+        <span class="badge orange" style="margin-left:auto">ARR: a confirmar · New Logo · Argentina</span>
+      </div>
+
+      <!-- MÉTRICAS -->
+      <div class="q-block">
+        <div class="q-category meddpicc">M · Métricas</div>
+        <div class="q-list">
+          <div class="q-item">
+            <div class="q-row">
+              <span class="q-num">Q1</span>
+              <span class="q-text"><strong>Qual é o problema que estão tentando resolver?</strong> O que acontece se não resolverem?</span>
+            </div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q1" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row">
+              <span class="q-num">Q2</span>
+              <span class="q-text"><strong>Eles conseguem quantificar o impacto?</strong> (perda de receita, custo de decisões erradas, churn)</span>
+            </div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q2" placeholder="Nota..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ECONOMIC BUYER -->
+      <div class="q-block">
+        <div class="q-category meddpicc">E · Economic Buyer</div>
+        <div class="q-list">
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q3</span><span class="q-text"><strong>Quem aprova o investimento?</strong> Já conversaram com essa pessoa?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q3" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q4</span><span class="q-text">Existe budget aprovado ou em aprovação? <em>Se não: sinal amarelo</em></span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q4" placeholder="Nota..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DECISION PROCESS -->
+      <div class="q-block">
+        <div class="q-category meddpicc">D · Decision Process</div>
+        <div class="q-list">
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q5</span><span class="q-text"><strong>Qual é o processo de decisão?</strong> Quantas pessoas precisam aprovar? Tem comitê?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q5" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q6</span><span class="q-text"><strong>Já foram por esse processo antes</strong> com outro fornecedor? O que aconteceu?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q6" placeholder="Nota..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAMPION -->
+      <div class="q-block">
+        <div class="q-category meddpicc">C · Champion</div>
+        <div class="q-list">
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q7</span><span class="q-text"><strong>Quem está vendendo internamente por vocês?</strong> Tem poder de influência real?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q7" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q8</span><span class="q-text">O champion sabe o que precisa acontecer para fechar? <strong>Já pediu algo concreto?</strong></span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q8" placeholder="Nota..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIZING -->
+      <div class="q-block">
+        <div class="q-category sizing">💡 Sizing da Oportunidade</div>
+        <div class="q-list">
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q9</span><span class="q-text"><strong>Quantos usuários têm na empresa?</strong> Quantas equipes poderiam usar Amplitude?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q9" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q10</span><span class="q-text">Estão mapeando <strong>só uma área ou o potencial completo?</strong> (Produto, Marketing, Analytics, Data?)</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q10" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q11</span><span class="q-text">YPF é uma empresa de grande porte. <strong>O deal mapeado reflete isso?</strong> Por que estão sendo conservadores?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q11" placeholder="Nota..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- URGÊNCIA -->
+      <div class="q-block">
+        <div class="q-category urgency">⚡ Urgência</div>
+        <div class="q-list">
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q12</span><span class="q-text"><strong>Por que Q3 e não Q2 ou Q4?</strong> O que está driving a timeline deles?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q12" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q13</span><span class="q-text">Existe algum evento crítico no negócio (lançamento, budget cycle, mudança de liderança) que cria urgência real?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q13" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q14</span><span class="q-text">🔑 <strong>"O que aconteceu nos últimos 30 dias nesse deal?"</strong> — revela nível real de engajamento.</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="ypf-q14" placeholder="Nota..."></textarea></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- FREE NOTES YPF -->
+    <div class="section-label">Anotações livres · YPF</div>
+
+    <div class="free-note-block">
+      <div class="free-note-label alert">⚠️ Sinais de Alerta</div>
+      <textarea class="free-note-textarea" data-id="ypf-alert" placeholder="Anote red flags identificados durante a apresentação..."></textarea>
+    </div>
+
+    <div class="free-note-block">
+      <div class="free-note-label obs">📌 Observações Gerais</div>
+      <textarea class="free-note-textarea" data-id="ypf-obs" placeholder="Contexto, dinâmica da equipe, comentários relevantes..."></textarea>
+    </div>
+
+    <div class="free-note-block" style="border-color: rgba(79,247,169,0.2); background: rgba(79,247,169,0.04);">
+      <div class="free-note-label next">✅ Próximos Passos · YPF</div>
+      <div class="next-steps-grid">
+        <div>
+          <div class="ns-label">Ação</div>
+          <div class="ns-label" style="margin-bottom:0">Dono</div>
+        </div>
+        <div class="next-step-row">
+          <div><div class="ns-label">Ação 1</div><input type="text" class="ns-input" data-id="ypf-ns1-acao" placeholder="Descreva a ação..."></div>
+          <div><div class="ns-label">Dono</div><input type="text" class="ns-input" data-id="ypf-ns1-dono" placeholder="Nome..."></div>
+          <div><div class="ns-label">Data</div><input type="date" class="ns-input" data-id="ypf-ns1-data"></div>
+        </div>
+        <div class="next-step-row">
+          <div><div class="ns-label">Ação 2</div><input type="text" class="ns-input" data-id="ypf-ns2-acao" placeholder="Descreva a ação..."></div>
+          <div><div class="ns-label">Dono</div><input type="text" class="ns-input" data-id="ypf-ns2-dono" placeholder="Nome..."></div>
+          <div><div class="ns-label">Data</div><input type="date" class="ns-input" data-id="ypf-ns2-data"></div>
+        </div>
+        <div class="next-step-row">
+          <div><div class="ns-label">Ação 3</div><input type="text" class="ns-input" data-id="ypf-ns3-acao" placeholder="Descreva a ação..."></div>
+          <div><div class="ns-label">Dono</div><input type="text" class="ns-input" data-id="ypf-ns3-dono" placeholder="Nome..."></div>
+          <div><div class="ns-label">Data</div><input type="date" class="ns-input" data-id="ypf-ns3-data"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="free-note-block" style="border-color: rgba(247,169,79,0.2); background: rgba(247,169,79,0.04);">
+      <div class="free-note-label" style="color: var(--accent2);">💬 Decisão de Pipeline</div>
+      <div class="decision-select-row" style="background:transparent; border:none; padding: 4px 0;">
+        <label>YPF fica em:</label>
+        <select class="deal-decision" data-id="ypf-decisao">
+          <option value="">— selecionar —</option>
+          <option value="✅ Q3 — Confirmado">✅ Q3 — Confirmado</option>
+          <option value="⚠️ Q3 — Condicional (ação específica necessária)">⚠️ Q3 — Condicional</option>
+          <option value="📅 Move para Q4">📅 Move para Q4</option>
+          <option value="❌ Remove do pipe">❌ Remove do pipe</option>
+        </select>
+        <textarea class="note-input" data-id="ypf-decisao-nota" placeholder="Justificativa..." style="flex:1; min-height:32px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TAB: BANCO MACRO ==================== -->
+  <div id="tab-macro" class="tab-content">
+
+    <div class="phase">
+      <div class="section-label">Qualificação MEDDPICC</div>
+      <div class="phase-header">
+        <span class="phase-num">Deal 02</span>
+        <span class="phase-title">Banco Macro</span>
+        <span class="badge green" style="margin-left:auto">ARR ~$100K · New Logo · Argentina</span>
+      </div>
+
+      <div class="q-block">
+        <div class="q-category meddpicc">M + E · Métricas & Economic Buyer</div>
+        <div class="q-list">
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q1</span><span class="q-text"><strong>$100K está baseado em quê?</strong> Usuários, MTUs, módulos? Fizeram sizing ou foi estimativa?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q1" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q2</span><span class="q-text">Quem validou esse número internamente? <strong>O EB já viu uma proposta</strong> ou ainda é exploratório?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q2" placeholder="Nota..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-category sizing">💡 Sizing — Banco Macro</div>
+        <div class="q-list">
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q3</span><span class="q-text">O Macro tem múltiplas verticais: <strong>digital, cartões, crédito, onboarding, CX</strong>. Estão mapeando só uma?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q3" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q4</span><span class="q-text"><strong>Qual é o volume de usuários digitais do Macro hoje?</strong> App + web? Isso muda o tamanho do deal.</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q4" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q5</span><span class="q-text">Se fecharmos $100K hoje, <strong>qual seria o caminho natural para expansion em 12 meses?</strong> Já pensaram nisso?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q5" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q6</span><span class="q-text">🔑 <em>"Se fossem pitch para o CDO/CPO, qual seria o deal ideal?"</em> — abre sizing sem pressionar.</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q6" placeholder="Nota..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-category meddpicc">D + C · Processo & Champion</div>
+        <div class="q-list">
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q7</span><span class="q-text"><strong>Quem são os stakeholders mapeados?</strong> Têm acesso a produto, dados e marketing ou só um deles?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q7" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q8</span><span class="q-text">Bancos têm processos longos de procurement e segurança. <strong>Já iniciaram isso?</strong> Existe RFP ou vendor approval?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q8" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q9</span><span class="q-text"><strong>O champion consegue mover isso internamente</strong> ou depende de um projeto maior ser aprovado?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q9" placeholder="Nota..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-category urgency">⚡ Urgência & Competição</div>
+        <div class="q-list">
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q10</span><span class="q-text"><strong>Tem concorrente na jogada?</strong> Mixpanel, GA4, solução interna? O que estão comparando?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q10" placeholder="Nota..."></textarea></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">Q11</span><span class="q-text"><strong>Q3 é realista</strong> dado o processo de um banco? Qual seria o pior cenário de timeline?</span></div>
+            <div class="note-row"><textarea class="note-input" data-id="macro-q11" placeholder="Nota..."></textarea></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="section-label">Anotações livres · Banco Macro</div>
+
+    <div class="free-note-block">
+      <div class="free-note-label alert">⚠️ Sinais de Alerta</div>
+      <textarea class="free-note-textarea" data-id="macro-alert" placeholder="Anote red flags identificados durante a apresentação..."></textarea>
+    </div>
+
+    <div class="free-note-block">
+      <div class="free-note-label obs">📌 Observações Gerais</div>
+      <textarea class="free-note-textarea" data-id="macro-obs" placeholder="Contexto, dinâmica da equipe, comentários relevantes..."></textarea>
+    </div>
+
+    <div class="free-note-block" style="border-color: rgba(79,247,169,0.2); background: rgba(79,247,169,0.04);">
+      <div class="free-note-label next">✅ Próximos Passos · Banco Macro</div>
+      <div class="next-steps-grid">
+        <div class="next-step-row">
+          <div><div class="ns-label">Ação 1</div><input type="text" class="ns-input" data-id="macro-ns1-acao" placeholder="Descreva a ação..."></div>
+          <div><div class="ns-label">Dono</div><input type="text" class="ns-input" data-id="macro-ns1-dono" placeholder="Nome..."></div>
+          <div><div class="ns-label">Data</div><input type="date" class="ns-input" data-id="macro-ns1-data"></div>
+        </div>
+        <div class="next-step-row">
+          <div><div class="ns-label">Ação 2</div><input type="text" class="ns-input" data-id="macro-ns2-acao" placeholder="Descreva a ação..."></div>
+          <div><div class="ns-label">Dono</div><input type="text" class="ns-input" data-id="macro-ns2-dono" placeholder="Nome..."></div>
+          <div><div class="ns-label">Data</div><input type="date" class="ns-input" data-id="macro-ns2-data"></div>
+        </div>
+        <div class="next-step-row">
+          <div><div class="ns-label">Ação 3</div><input type="text" class="ns-input" data-id="macro-ns3-acao" placeholder="Descreva a ação..."></div>
+          <div><div class="ns-label">Dono</div><input type="text" class="ns-input" data-id="macro-ns3-dono" placeholder="Nome..."></div>
+          <div><div class="ns-label">Data</div><input type="date" class="ns-input" data-id="macro-ns3-data"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="free-note-block" style="border-color: rgba(247,169,79,0.2); background: rgba(247,169,79,0.04);">
+      <div class="free-note-label" style="color: var(--accent2);">💬 Decisão de Pipeline</div>
+      <div class="decision-select-row" style="background:transparent; border:none; padding: 4px 0;">
+        <label>Banco Macro fica em:</label>
+        <select class="deal-decision" data-id="macro-decisao">
+          <option value="">— selecionar —</option>
+          <option value="✅ Q3 — Confirmado">✅ Q3 — Confirmado</option>
+          <option value="⚠️ Q3 — Condicional (ação específica necessária)">⚠️ Q3 — Condicional</option>
+          <option value="📅 Move para Q4">📅 Move para Q4</option>
+          <option value="❌ Remove do pipe">❌ Remove do pipe</option>
+        </select>
+        <textarea class="note-input" data-id="macro-decisao-nota" placeholder="Justificativa..." style="flex:1; min-height:32px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TAB: COACHING ==================== -->
+  <div id="tab-coaching" class="tab-content">
+
+    <div class="phase">
+      <div class="section-label">Mensagem Central</div>
+      <div class="phase-header">
+        <span class="phase-num">Coaching</span>
+        <span class="phase-title">Land & Expand com Ambição</span>
+      </div>
+
+      <div class="coaching-box">
+        <div class="box-title">Mensagem central para a equipe</div>
+        <ul>
+          <li><strong>Land de $30K não é estratégia — é desconforto disfarçado de prudência.</strong> O cliente não pede para começar pequeno; vocês assumem que ele quer.</li>
+          <li>A pergunta certa não é <em>"quanto estão dispostos a pagar?"</em> — é <em>"qual é o tamanho real do problema deles?"</em> O investimento segue o problema.</li>
+          <li><strong>Um land pequeno cria um expand difícil.</strong> O cliente ancora no número inicial. $30K → $100K é muito mais difícil do que fechar $100K direto.</li>
+          <li>Para enterprise (banco, oil & gas): <strong>o decisor não quer o menor pacote</strong> — quer a solução mais segura. Pensar pequeno sinaliza falta de confiança no produto.</li>
+        </ul>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title"><span class="dot"></span> Perguntas de coaching</div>
+          <ul>
+            <li><em>"Se vocês fossem o cliente, qual solução comprariam?"</em></li>
+            <li><em>"O que impede de propor um deal 3x maior?"</em></li>
+            <li><em>"Quem mais na empresa se beneficia além do contato atual?"</em></li>
+            <li><em>"Qual seria o ROI para eles usando Amplitude full?"</em></li>
+            <li><em>"Já mostraram o produto para o C-Level ou ficou no nível técnico?"</em></li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="dot green"></span> Sinais de potencial maior</div>
+          <ul>
+            <li>Empresa grande com múltiplos produtos digitais</li>
+            <li>Menção a outras equipes que poderiam usar</li>
+            <li>Problema de dados que afeta mais de uma área</li>
+            <li>Contato técnico entusiasmado sem acesso ao EB</li>
+            <li>Concorrente na jogada com solução mais cara</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top: 28px;">Notas da sessão de coaching</div>
+      <div class="free-note-block">
+        <div class="free-note-label general">📝 Observações gerais sobre a equipe</div>
+        <textarea class="free-note-textarea" data-id="coaching-geral" placeholder="Comportamentos, padrões, gaps identificados na apresentação dos dois reps..."></textarea>
+      </div>
+      <div class="free-note-block">
+        <div class="free-note-label obs">🎯 Ações de coaching pós-sessão</div>
+        <textarea class="free-note-textarea" data-id="coaching-acoes" placeholder="O que precisa de follow-up com Demi, Lepe ou Ale..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TAB: DECISÃO FINAL ==================== -->
+  <div id="tab-decisao" class="tab-content">
+
+    <div class="phase">
+      <div class="section-label">Critérios de Qualificação</div>
+      <div class="phase-header">
+        <span class="phase-num">Final</span>
+        <span class="phase-title">Fica no Pipe ou Sai?</span>
+      </div>
+
+      <div class="decision-wrap">
+        <table class="decision-table">
+          <thead>
+            <tr>
+              <th>Critério</th>
+              <th>✅ Fica em Q3</th>
+              <th>⚠️ Condicional</th>
+              <th>❌ Move ou Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Economic Buyer identificado</td><td class="signal-go">Sim, com acesso</td><td class="signal-warn">Identificado, sem acesso</td><td class="signal-stop">Não identificado</td></tr>
+            <tr><td>Budget</td><td class="signal-go">Aprovado ou em aprovação</td><td class="signal-warn">Existe, não aprovado</td><td class="signal-stop">Sem budget claro</td></tr>
+            <tr><td>Próximo passo concreto</td><td class="signal-go">Data + dono + ação</td><td class="signal-warn">Ação definida, sem data</td><td class="signal-stop">Nenhum próximo passo</td></tr>
+            <tr><td>Urgência real</td><td class="signal-go">Evento ou deadline claro</td><td class="signal-warn">Desejo, sem pressão</td><td class="signal-stop">Sem urgência mapeada</td></tr>
+            <tr><td>Champion ativo</td><td class="signal-go">Engajado e influente</td><td class="signal-warn">Existe, mas passivo</td><td class="signal-stop">Sem champion</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 24px;">
+        <div class="section-label">Resumo Final da Sessão</div>
+        <div class="free-note-block">
+          <div class="free-note-label general">📋 Resumo executivo</div>
+          <textarea class="free-note-textarea" data-id="decisao-resumo" placeholder="Síntese da sessão: o que ficou claro, o que precisa de atenção, comprometimentos assumidos..." style="min-height: 100px;"></textarea>
+        </div>
+        <div class="free-note-block">
+          <div class="free-note-label next">💬 Frase de fechamento usada</div>
+          <textarea class="free-note-textarea" data-id="decisao-fechamento" placeholder='Sugestão: "Saímos daqui com clareza sobre o que precisa acontecer em cada deal. O que não tem próximo passo concreto não tem Q3. Vocês têm o suporte da Amplitude — usem isso."'></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // TAB NAVIGATION
+  function switchTab(id) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      const ids = ['ypf', 'macro', 'coaching', 'decisao'];
+      t.classList.toggle('active', ids[i] === id);
+    });
+    document.querySelectorAll('.tab-content').forEach(c => {
+      c.classList.toggle('active', c.id === 'tab-' + id);
+    });
+  }
+
+  // AUTO-SAVE on input
+  function getAllData() {
+    const data = {};
+    document.querySelectorAll('[data-id]').forEach(el => {
+      data[el.dataset.id] = el.value;
+    });
+    return data;
+  }
+
+  function loadData(data) {
+    Object.entries(data).forEach(([id, val]) => {
+      const el = document.querySelector(`[data-id="${id}"]`);
+      if (el) el.value = val;
+    });
+  }
+
+  function saveNotes() {
+    const data = getAllData();
+    localStorage.setItem('sola_roundtable_notes', JSON.stringify(data));
+    const status = document.getElementById('saveStatus');
+    status.classList.add('show');
+    setTimeout(() => status.classList.remove('show'), 2000);
+  }
+
+  function clearNotes() {
+    if (!confirm('Limpar todas as notas? Esta ação não pode ser desfeita.')) return;
+    localStorage.removeItem('sola_roundtable_notes');
+    document.querySelectorAll('[data-id]').forEach(el => el.value = '');
+  }
+
+  function exportNotes() {
+    const data = getAllData();
+    const date = new Date().toLocaleDateString('pt-BR');
+    let out = `SOLA SALES ROUND TABLE — NOTAS DE SESSÃO\n${date}\n${'='.repeat(50)}\n\n`;
+
+    const sections = [
+      { title: 'DEAL 01 · YPF', prefix: 'ypf' },
+      { title: 'DEAL 02 · BANCO MACRO', prefix: 'macro' },
+      { title: 'COACHING', prefix: 'coaching' },
+      { title: 'DECISÃO FINAL', prefix: 'decisao' }
+    ];
+
+    const labels = {
+      'q1':'Q1','q2':'Q2','q3':'Q3','q4':'Q4','q5':'Q5','q6':'Q6','q7':'Q7',
+      'q8':'Q8','q9':'Q9','q10':'Q10','q11':'Q11','q12':'Q12','q13':'Q13','q14':'Q14',
+      'alert':'Sinais de Alerta','obs':'Observações Gerais',
+      'ns1-acao':'Ação 1','ns1-dono':'Dono 1','ns1-data':'Data 1',
+      'ns2-acao':'Ação 2','ns2-dono':'Dono 2','ns2-data':'Data 2',
+      'ns3-acao':'Ação 3','ns3-dono':'Dono 3','ns3-data':'Data 3',
+      'decisao':'Decisão Pipeline','decisao-nota':'Justificativa',
+      'geral':'Obs. Equipe','acoes':'Ações de Coaching',
+      'resumo':'Resumo Executivo','fechamento':'Fechamento'
+    };
+
+    sections.forEach(sec => {
+      out += `\n${sec.title}\n${'-'.repeat(40)}\n`;
+      Object.entries(data).forEach(([key, val]) => {
+        if (key.startsWith(sec.prefix + '-') && val.trim()) {
+          const suffix = key.replace(sec.prefix + '-', '');
+          const label = labels[suffix] || suffix;
+          out += `\n[${label}]\n${val}\n`;
+        }
+      });
+    });
+
+    const blob = new Blob([out], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `sola_roundtable_${new Date().toISOString().slice(0,10)}.txt`;
+    a.click();
+  }
+
+  // Auto-save on every change
+  document.addEventListener('input', () => saveNotes());
+
+  // Load on start
+  window.addEventListener('load', () => {
+    const saved = localStorage.getItem('sola_roundtable_notes');
+    if (saved) {
+      try { loadData(JSON.parse(saved)); } catch(e) {}
+    }
+  });
+</script>
+</body>
+</html>
